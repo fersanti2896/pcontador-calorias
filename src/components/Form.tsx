@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { categories } from '../data/categories'
 import { Activity } from '../types/activity.type';
 
@@ -16,11 +16,24 @@ export const Form = () => {
             ...activity,
             [e.target.id]: isNumberField ? +e.target.value : e.target.value            
         });
-    }
+    };
+
+    const isValidActivity = () => {
+        const { name, calories } = activity;
+
+        return name.trim() !== '' && calories > 0;
+    };
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log('submit')
+    };
 
     return (
         <>
-            <form className='space-y-5 bg-white shadow p-10 rounded-lg'>
+            <form className='space-y-5 bg-white shadow p-10 rounded-lg'
+                  onSubmit={handleSubmit}
+            >
                 <div className='grid grid-cols-1 gap-3'>
                     <label htmlFor="" className='font-bold'>Categoria:</label>
                     <select className='border border-slate-300 p-2 rounded-lg w-full bg-white'
@@ -60,8 +73,9 @@ export const Form = () => {
                 </div>
 
                 <input type="submit"
-                    className='bg-gray-800 hover:bg-gray-900 w-full p-2 font-bold uppercase text-white cursor-pointer'
-                    value='Guardar comida o Guardar Ejercicio'
+                    className='bg-emerald-700 hover:bg-emerald-900 w-full p-2 font-bold uppercase text-white cursor-pointer disabled:opacity-10'
+                    value={activity.category === 1 ? 'Guardar Comida': 'Guardar Ejercicio'}
+                    disabled={!isValidActivity()}
                 />
             </form>
         </>
